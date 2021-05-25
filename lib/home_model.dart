@@ -8,7 +8,7 @@ class HomeModel {
     lista = Future.delayed(
       Duration(seconds: 2),
       () {
-        return myList..addAll(List<int>.filled(10, 1));
+        return myList..addAll(List<int>.filled(20, 1));
       },
     );
   }
