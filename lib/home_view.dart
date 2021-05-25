@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:streamexample/controller.dart';
+import 'package:streamexample/viewmodel.dart';
 
 class HomeView extends StatefulWidget {
   @override
@@ -7,7 +7,7 @@ class HomeView extends StatefulWidget {
 }
 
 class _HomeViewState extends State<HomeView> {
-  ControllerHome controller = ControllerHome();
+  HomeViewModel viewModel = HomeViewModel();
 
   @override
   Widget build(BuildContext context) {
@@ -17,10 +17,10 @@ class _HomeViewState extends State<HomeView> {
           children: [
             Expanded(
               child: Center(
-                child: FutureBuilder<List<int>>(
-                    future: controller.lista,
+                child: StreamBuilder<List<int>>(
+                    stream: viewModel.streamLista.stream,
                     builder: (context, snapshot) {
-                      if (snapshot.connectionState != ConnectionState.done) {
+                      if (snapshot.connectionState != ConnectionState.active) {
                         return CircularProgressIndicator();
                       }
 
@@ -29,6 +29,9 @@ class _HomeViewState extends State<HomeView> {
                         return ListView.builder(
                           itemCount: array.length,
                           itemBuilder: (context, index) {
+                            if (index % 20 == 15) {
+                              viewModel.loadLista();
+                            }
                             return Center(
                               child: Container(
                                 margin: EdgeInsets.all(10),
@@ -52,7 +55,7 @@ class _HomeViewState extends State<HomeView> {
               child: ElevatedButton(
                 onPressed: () {
                   setState(() {
-                    controller.loadLista();
+                    viewModel.loadLista();
                   });
                 },
                 child: Text('Load'),
